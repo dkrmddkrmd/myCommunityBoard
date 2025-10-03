@@ -1,6 +1,6 @@
-package repository;
+package com.example.demo.repository;
 
-import domain.User;
+import com.example.demo.domain.User;
 
 import java.util.Optional;
 

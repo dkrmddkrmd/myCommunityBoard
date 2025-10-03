@@ -1,35 +1,35 @@
-package repository;
+package com.example.demo.repository;
 
-import domain.User;
+import com.example.demo.domain.User;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
 import java.util.Optional;
 
 public class JpaUserRepository implements UserRepository{
-    private EntityManager em;
+    private EntityManager entityManager;
 
     public JpaUserRepository(EntityManager em) {
-        this.em = em;
+        this.entityManager = em;
     }
 
     @Override
     public User save(User user) {
-        em.persist(user);
+        entityManager.persist(user);
 
         return user;
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        User user = em.find(User.class, id);
+        User user = entityManager.find(User.class, id);
 
         return Optional.ofNullable(user);
     }
 
     @Override
     public Optional<User> findByUsername(String username) {
-        List<User> result = em.createQuery("select u from User u where u.username = :username", User.class)
+        List<User> result = entityManager.createQuery("select u from User u where u.username = :username", User.class)
                 .setParameter("username", username)
                 .getResultList();
 
