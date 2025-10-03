@@ -34,4 +34,9 @@ public class SpringConfig {
     public CommentRepository commentRepository(){
         return new JpaCommentRepository(entityManager);
     }
+
+    @Bean
+    public UserService userService(UserRepository userRepository){ // <- 인터페이스에 의존
+        return new UserService(userRepository);
+    }
 }
