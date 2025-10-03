@@ -39,4 +39,9 @@ public class SpringConfig {
     public UserService userService(UserRepository userRepository){ // <- 인터페이스에 의존
         return new UserService(userRepository);
     }
+
+    @Bean
+    public PostService postService(PostRepository postRepository, UserRepository userRepository){
+        return new PostService(postRepository, userRepository);
+    }
 }
