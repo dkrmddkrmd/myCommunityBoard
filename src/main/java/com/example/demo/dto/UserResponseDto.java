@@ -1,16 +1,22 @@
-package com.example.demo.controller;
+package com.example.demo.dto;
 
-public class UserForm {
+public class UserResponseDto {
+    private Long id;
     private String username;
-    private String password;
     private String nickname;
 
-    public String getPassword() {
-        return password;
+    public UserResponseDto(Long id, String username, String nickname) {
+        this.id = id;
+        this.username = username;
+        this.nickname = nickname;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

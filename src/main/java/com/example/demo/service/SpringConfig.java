@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.domain.Comment;
 import com.example.demo.repository.*;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,10 @@ public class SpringConfig {
     @Bean
     public PostService postService(PostRepository postRepository, UserRepository userRepository){
         return new PostService(postRepository, userRepository);
+    }
+
+    @Bean
+    public CommentService commentService(CommentRepository commentRepository,PostRepository postRepository, UserRepository userRepository){
+        return new CommentService(commentRepository, postRepository, userRepository);
     }
 }
