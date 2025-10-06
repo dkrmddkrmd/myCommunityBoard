@@ -19,7 +19,7 @@ public class PostService {
         this.userRepository = userRepository;
     }
 
-    Long createPost(Long userId, Post post){
+    public Long createPost(Long userId, Post post){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 회원입니다."));
 
@@ -30,16 +30,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    List<Post> findPosts(){
+    public List<Post> findPosts(){
         return postRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    Optional<Post> findPost(Long postId){
+    public Optional<Post> findPost(Long postId){
         return postRepository.findById(postId);
     }
 
-    void updatePost(Long userId, Long postId, String newTitle, String newContent){
+    public void updatePost(Long userId, Long postId, String newTitle, String newContent){
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 게시글 입니다."));
 
@@ -51,7 +51,7 @@ public class PostService {
         post.setContent(newContent);
     }
 
-    void deletePost(Long userId, Long postId){
+    public void deletePost(Long userId, Long postId){
         // 1. 삭제할 게시글 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 게시글입니다."));
