@@ -4,6 +4,7 @@ import com.example.demo.domain.User;
 import com.example.demo.repository.MemoryUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,12 +13,13 @@ class UserServiceTest {
 
     UserService userService;
     MemoryUserRepository memberRepository;
+    PasswordEncoder passwordEncoder;
 
     @BeforeEach // 각 테스트를 실행하기 전에 먼저 실행되는 메서드
     public void beforeEach() {
         // 테스트마다 독립적인 리포지토리와 서비스를 새로 생성
         memberRepository = new MemoryUserRepository();
-        userService = new UserService(memberRepository);
+        userService = new UserService(memberRepository, passwordEncoder);
     }
 
     @Test

@@ -3,6 +3,7 @@ package com.example.demo.service;
 
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -10,16 +11,20 @@ import java.util.Optional;
 @Transactional
 public class UserService{
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Long join(User user) {
-        // 1. 중복 회원 검증 (비즈니스 로직)
-        validateDuplicateUser(user);
+        validateDuplicateUser(user); // 중복 회원 검증
 
-        // 2. 검증 통과 후 저장
+        // 비밀번호를 암호화해서 저장
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
         userRepository.save(user);
         return user.getId();
     }

@@ -6,6 +6,8 @@ import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class SpringConfig {
@@ -37,8 +39,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public UserService userService(UserRepository userRepository){ // <- 인터페이스에 의존
-        return new UserService(userRepository);
+    public UserService userService(UserRepository userRepository, PasswordEncoder passwordEncoder){ // <- 인터페이스에 의존
+        return new UserService(userRepository, passwordEncoder);
     }
 
     @Bean
@@ -49,5 +51,10 @@ public class SpringConfig {
     @Bean
     public CommentService commentService(CommentRepository commentRepository,PostRepository postRepository, UserRepository userRepository){
         return new CommentService(commentRepository, postRepository, userRepository);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
