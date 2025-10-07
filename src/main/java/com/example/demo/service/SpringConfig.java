@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.config.JwtUtil;
 import com.example.demo.domain.Comment;
 import com.example.demo.repository.*;
 import jakarta.persistence.EntityManager;
@@ -39,8 +40,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public UserService userService(UserRepository userRepository, PasswordEncoder passwordEncoder){ // <- 인터페이스에 의존
-        return new UserService(userRepository, passwordEncoder);
+    public UserService userService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil){ // <- 인터페이스에 의존
+        return new UserService(userRepository, passwordEncoder, jwtUtil);
     }
 
     @Bean

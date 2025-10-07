@@ -44,16 +44,14 @@ public class UserController {
     // 로그인 API
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto requestDto) {
-        Optional<User> userOptional = userService.login(requestDto.getUsername(), requestDto.getPassword());
+        String token = userService.login(requestDto.getUsername(), requestDto.getPassword());
 
-        if (userOptional.isPresent()) {
-            // 로그인 성공 시 사용자 정보 반환 (비밀번호 제외)
-            User user = userOptional.get();
-            UserResponseDto responseDto = new UserResponseDto(user.getId(), user.getUsername(), user.getNickname());
-            return ResponseEntity.ok(responseDto);
+        if (token != null) {
+            // 로그인 성공: 200 OK 상태 코드와 함께 토큰을 Body에 담아 반환
+            return ResponseEntity.ok(token);
         } else {
-            // 로그인 실패 시 401 Unauthorized 상태 코드 반환
-            return ResponseEntity.status(401).body("로그인 실패");
+            // 로그인 실패: 401 Unauthorized 상태 코드 반환
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 
+import com.example.demo.config.JwtUtil;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,10 +13,12 @@ import java.util.Optional;
 public class UserService{
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
+    private final JwtUtil jwtUtil; // JwtUtil 주입
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public Long join(User user) {
@@ -36,9 +39,19 @@ public class UserService{
                 });
     }
 
-    public Optional<User> login(String username, String password) {
-        return userRepository.findByUsername(username)
-                .filter(user -> user.getPassword().equals(password));
+    public String login(String username, String password) {
+        // 1. 사용자 이름으로 User 조회
+        User user = userRepository.findByUsername(username)
+                .orElse(null);
+
+        // 2. 사용자가 존재하고, 비밀번호가 일치하는지 확인
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            // 3. 로그인 성공 시 JWT 토큰 생성하여 반환
+            return jwtUtil.createToken(user.getUsername());
+        }
+
+        // 4. 로그인 실패 시 null 반환
+        return null;
     }
 
     public Optional<User> findUser(Long userId) {
