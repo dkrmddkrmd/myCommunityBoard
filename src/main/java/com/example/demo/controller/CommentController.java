@@ -1,11 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.domain.Comment;
+import com.example.demo.domain.User;
 import com.example.demo.dto.CommentCreateRequestDto;
 import com.example.demo.dto.CommentResponseDto;
 import com.example.demo.service.CommentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,11 +29,10 @@ public class CommentController {
      */
     @PostMapping
     public ResponseEntity<Long> createComment(@PathVariable Long postId,
-                                              @RequestBody CommentCreateRequestDto requestDto) {
-        // TODO: userId는 나중에 로그인 기능 구현 후 인증 정보에서 가져옵니다. 지금은 임시로 1L 사용.
-        Long tempUserId = 1L;
+                                              @RequestBody CommentCreateRequestDto requestDto, @AuthenticationPrincipal User user) {
+        Long userId = user.getId();
 
-        Long createdCommentId = commentService.createComment(tempUserId, postId, requestDto.getContent());
+        Long createdCommentId = commentService.createComment(userId, postId, requestDto.getContent());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCommentId);
     }

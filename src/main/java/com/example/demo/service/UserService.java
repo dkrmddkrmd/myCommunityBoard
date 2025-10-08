@@ -4,13 +4,16 @@ package com.example.demo.service;
 import com.example.demo.config.JwtUtil;
 import com.example.demo.domain.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Transactional
-public class UserService{
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
     private final JwtUtil jwtUtil; // JwtUtil 주입
@@ -57,5 +60,13 @@ public class UserService{
     public Optional<User> findUser(Long userId) {
         // userRepository.findById가 이미 Optional을 반환하므로 그대로 반환
         return userRepository.findById(userId);
+    }
+
+    // UserDetailsService의 핵심 메서드 구현
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // findByUsername의 결과를 UserDetails 타입으로 반환
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
     }
 }
